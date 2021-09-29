@@ -82,5 +82,26 @@ struct digit *readNumber(void) {
 // Write your divisibleByThree() function here
 int divisibleByThree(struct digit *start)
 {
-    return 1;
+    struct digit *ptr;
+    ptr = start;
+    int number = 0;
+    int place = 1;
+    int digit;
+
+    //convert to a number
+    while (ptr!=NULL) {
+        digit = ptr->num;
+        number = number + digit*place;
+        place = place * 10;
+        ptr = ptr->next;
+    }
+    if((number % 3) == 0) 
+    {
+        return 1;
+    }
+    else 
+    {
+        return 0;
+    }
+
 }
