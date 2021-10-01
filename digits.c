@@ -13,6 +13,7 @@ void freeNumber(struct digit *start);
 int changeThrees(struct digit * start);
 struct digit * readNumber(void);
 //Add your own function prototypes here
+int countRedun(struct digit *);
 
 int main(void) {
     struct digit *start;
@@ -20,10 +21,8 @@ int main(void) {
 
     printf("The number ");
     printNumber(start);
-    printf("was modified in %d places.\n", changeThrees(start));
+    printf("contains %d redundancies.\n", countRedun(start));
 
-    printf("The new number is ");
-    printNumber(start);
     freeNumber(start);
 
     return 0;
@@ -101,3 +100,28 @@ int changeThrees(struct digit * start) {
     return count;
 }
 
+int countRedun(struct digit *start)
+{
+    int count,i,digitCount;
+    struct digit *ptr;
+    
+    count = 0;
+
+    for(i = 0; i < 10; i++)
+    {
+        ptr = start;    
+        digitCount = 0;
+        while(ptr != NULL) {
+            if(ptr->num == i) 
+            {
+                digitCount++;
+            }
+            ptr = ptr->next;
+        }
+        if(digitCount > 1) //handle 1 or 0 digits
+        {
+            count += (digitCount - 1);
+        }
+    }
+    return count;
+}
