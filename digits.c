@@ -3,27 +3,29 @@
 
 struct digit {
     int num;
-    struct digit * next;
+    struct digit *next;
 };
 
 struct digit * createDigit(int dig);
-struct digit * append( struct digit *, struct digit *);
+struct digit * append(struct digit * end, struct digit * newDigptr);
+void printNumber(struct digit *start);
+void freeNumber(struct digit *start);
+int changeThrees(struct digit * start);
+struct digit * readNumber(void);
+//Add your own function prototypes here
 
 int main(void) {
-    int i;
-    int digits[3] = {5,3,7};
-    struct digit *start, *newdigitptr, *end;
+    struct digit *start;
+    start = readNumber();
 
-    start = createDigit(digits[0]);
-    end = start;
-    for(i = 1; i < 3; i++)
-    {
-        newdigitptr = createDigit(digits[i]);
-        end = append(end,newdigitptr);
-    }
+    printf("The number ");
+    printNumber(start);
+    printf("was modified in %d places.\n", changeThrees(start));
 
-    free(start);
-    free(end);
+    printf("The new number is ");
+    printNumber(start);
+    freeNumber(start);
+
     return 0;
 }
 
@@ -35,10 +37,67 @@ struct digit * createDigit(int dig) {
     return ptr;
 }
 
-struct digit *append( struct digit *end, struct digit *newdigitptr)
-{
-    end->next = newdigitptr;
-    end = newdigitptr;
-
-    return end;
+struct digit * append(struct digit * end, struct digit * newDigptr) {
+    end->next = newDigptr;
+    return(end->next);
 }
+
+void printNumber(struct digit *start) {
+    struct digit * ptr = start;
+    while (ptr!=NULL) {
+        printf("%d", ptr->num);
+        ptr = ptr->next;
+    }
+    printf("\n");
+}
+
+void freeNumber(struct digit *start) {
+    struct digit * ptr = start;
+    struct digit * tmp;
+    while (ptr!=NULL) {
+        tmp = ptr->next;
+        free(ptr);
+        ptr = tmp;
+    }
+}
+
+struct digit * readNumber(void) {
+    char c;
+    int d;
+    struct digit *start, *end, *newptr;
+    start = NULL;
+    scanf("%c", &c);
+    while (c != '\n') {
+        d = c-48;
+        newptr = createDigit(d);
+        if (start == NULL) {
+            start = newptr;
+            end = start;
+        } else {
+            end = append(end, newptr);
+        }
+        scanf("%c", &c);
+    }
+    return(start);
+}
+
+// Write your changeThrees() function here
+int changeThrees(struct digit * start) {
+    int count;
+    struct digit *ptr;
+    
+    ptr = start;    
+    count = 0;
+
+    while(ptr != NULL) {
+        if(ptr->num == 3) 
+        {
+            count++;
+            ptr->num = 9;
+        }
+        ptr = ptr->next;
+    }
+
+    return count;
+}
+
